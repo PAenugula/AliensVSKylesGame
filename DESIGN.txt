@@ -1,0 +1,18 @@
+Phaniraj Aenugula
+Project 1 Design Document
+
+
+  First of all, I took out all the functions from my Functions class because all of them were
+very object-oriented. Ultimately, I didn't place any functions in a central Functions
+class as none really needed to be there.
+
+
+ There was some functions where I was on the fence on to whether to place in which classes such
+as the executeOctoFullActivity(), executeOctoNotFullActivity(), executeFishActivity(), etc.
+These functions could have worked well in various classes like Entity, WorldModel, or even Action.
+However, in the end I ended up placing them in the Entity class as I felt it made sense for an
+entity to execute a specific function based on their kind. Functions like findNearest(),
+nearestEntity(), nextPositionCrab(), and nextPositionOcto() all worked very closely with
+attributes of both the Entity and WorldModel classes. They could have been equally as effectively
+been placed in either. Ultimately, I placed them in WorldModel, becuase I viewed the Entity
+objects as being controlled by the WorldModel.
