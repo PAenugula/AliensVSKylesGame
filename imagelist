@@ -17,13 +17,13 @@ crab images/crabout09.bmp 255 255 255 128
 crab images/crabout10.bmp 255 255 255 128
 crab images/crabout11.bmp 255 255 255 128
 crab images/crabout11.bmp 255 255 255 128
-sea images/sea.bmp 255 255 255 0
+sea images/groundBlock.png 255 255 255 0
 octo images/s1.bmp 255 255 255 0
 octo images/s2.bmp 255 255 255 0
 octo images/s3.bmp 255 255 255 0
 octo images/s4.bmp 255 255 255 0
 octo images/s5.bmp 255 255 255 0
-obstacle images/rock.bmp
+obstacle images/obstacleBlock.png
 fish images/fish.bmp 255 255 255 0
 quake images/quake1.bmp 255 255 255 0
 quake images/quake2.bmp 255 255 255 0
@@ -34,3 +34,8 @@ quake images/quake6.bmp 255 255 255 0
 bubbles images/bubbles.bmp
 seaGrass images/Seaweed1.bmp 255 255 255 0
 background_default images/none.bmp
+zenomorph images/zenomorph0.png 255 255 255 128
+zenomorph images/zenomorph1.png 255 255 255 128
+zenomorph images/zenomorph2.png 255 255 255 128
+zenomorph images/zenomorph3.png 255 255 255 128
+zenomorph images/zenomorph4.png 255 255 255 128

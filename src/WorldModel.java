@@ -61,6 +61,13 @@ final class WorldModel
    private static final int PROPERTY_KEY = 0;
 
 
+
+   //OUR NEW STATIC VARIABLES:
+   private static final String PLAYER1_KEY = "player";
+   private static final String ZENOMORPH_KEY = "zenomorph";
+
+
+
    public WorldModel(int numRows, int numCols, Background defaultBackground)
    {
       this.numRows = numRows;
