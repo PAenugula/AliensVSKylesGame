@@ -17,6 +17,10 @@ crab images/crabout09.bmp 255 255 255 128
 crab images/crabout10.bmp 255 255 255 128
 crab images/crabout11.bmp 255 255 255 128
 crab images/crabout11.bmp 255 255 255 128
+raptor images/raptor0.png 255 255 255 128
+raptor images/raptor1.png 255 255 255 128
+raptor images/raptor2.png 255 255 255 128
+raptor images/raptor3.png 255 255 255 128
 sea images/groundBlock.png 255 255 255 0
 octo images/s1.bmp 255 255 255 0
 octo images/s2.bmp 255 255 255 0
@@ -34,6 +38,7 @@ quake images/quake6.bmp 255 255 255 0
 bubbles images/groundBlock.png
 seaGrass images/Seaweed1.bmp 255 255 255 0
 background_default images/groundBlock.png
+background_default images/cave.png
 zenomorph images/zenomorph0.png 255 255 255 128
 zenomorph images/zenomorph1.png 255 255 255 128
 zenomorph images/zenomorph2.png 255 255 255 128

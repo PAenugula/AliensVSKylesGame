@@ -14,6 +14,7 @@ public final class VirtualWorld
    extends PApplet
 {
    private static final int TIMER_ACTION_PERIOD = 100;
+   private static final long RAPTOR_SPAWN_PERIOD = 5000;
 
    private static final int VIEW_WIDTH = 1280;
    private static final int VIEW_HEIGHT = 960;
@@ -48,6 +49,7 @@ public final class VirtualWorld
    private EventScheduler scheduler;
 
    private long next_time;
+   private long crab_time;
 
    public void settings()
    {
@@ -73,11 +75,16 @@ public final class VirtualWorld
       scheduleActions(world, scheduler, imageStore);
 
       next_time = System.currentTimeMillis() + TIMER_ACTION_PERIOD;
+      crab_time = System.currentTimeMillis() + TIMER_ACTION_PERIOD;
    }
 
    public void draw()
    {
       long time = System.currentTimeMillis();
+      if (time >= crab_time) {
+         world.spawnRaptor(imageStore, scheduler);
+         crab_time = crab_time + RAPTOR_SPAWN_PERIOD;
+      }
       if (time >= next_time)
       {
          this.scheduler.updateOnTime(time);
@@ -116,7 +123,7 @@ public final class VirtualWorld
 
    private static Background createDefaultBackground(ImageStore imageStore)
    {
-      return new Background(DEFAULT_IMAGE_NAME,
+      return Background.createSea(DEFAULT_IMAGE_NAME,
          imageStore.getImageList(DEFAULT_IMAGE_NAME));
    }
 

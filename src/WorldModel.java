@@ -109,6 +109,17 @@ final class WorldModel
       }
    }
 
+   public void spawnRaptor(ImageStore imageStore, EventScheduler scheduler) {
+      if (!isOccupied(new Point(0, 1))){
+         Raptor raptor = new Raptor("rap1", new Point(0, 1), imageStore.getImageList("raptor"),
+                 0, 0, 0, 1000, 1000);
+         tryAddEntity(raptor);
+         raptor.scheduleActions(scheduler, this, imageStore);
+      }
+
+
+   }
+
    public void load(Scanner in, ImageStore imageStore)
    {
 
@@ -137,48 +148,51 @@ final class WorldModel
          }
          lineNumber++;
       }
+      Point cave = new Point(0, 0);
+      setBackground(cave, Background.createCave("raptorCave", imageStore.getImageList("background_default")));
 
-//      Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
-//              point ->
-//                      Stream.<Point>builder()
-//                              .add(new Point(point.getX(), point.getY() - 1))
-//                              .add(new Point(point.getX(), point.getY() + 1))
-//                              .add(new Point(point.getX() - 1, point.getY()))
-//                              .add(new Point(point.getX() + 1, point.getY()))
-//                              .build();
-//      Random rand = new Random();
-//      List<Point> walls = new ArrayList<>();
-//      List<Point> maze = new ArrayList<>();
-//      Map<Point, Boolean> placeToPassage = new HashMap<>();
-//      for (int x = 0; x < getNumCols(); x ++) {
-//         for(int y =0; y < getNumRows(); y++) {
-//            placeToPassage.put(new Point(x, y), false);
-//         }
-//      }
-//      Point start = new Point(rand.nextInt(getNumCols()), rand.nextInt(getNumRows()));
-//      placeToPassage.put(start, true);
-//      start.visited = true;
-//      walls.addAll(CARDINAL_NEIGHBORS.apply(start).filter((s) -> (withinBounds(s))).collect(Collectors.toList()));
-//      while (!walls.isEmpty()) {
-//         int index = rand.nextInt(walls.size());
-//         Point curr = walls.get(index);
-//         List<Point> neighbors = CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter((s) -> (placeToPassage.get(s))).collect(Collectors.toList());
-//         boolean isPassage = neighbors.size() <= 1;
-//         if (isPassage) {
-//            placeToPassage.put(curr, true);
-//            walls.addAll(CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter(s -> (!placeToPassage.get(s))).collect(Collectors.toList()));
-//         }
-//         walls.remove(index);
-//         curr.visited = true;
-//      }
-//      for (int x = 0; x < getNumCols(); x ++) {
-//         for(int y =0; y < getNumRows(); y++) {
-//            if (!placeToPassage.get(new Point(x, y)) && getOccupant(new Point(x, y)).getClass().equals(Background.class)) {
-//               Entity e = new Obstacle("rand", new Point(x,y), imageStore.getImageList(OBSTACLE_KEY));
-//               tryAddEntity(e);
-//            }
-//         }
-//      }
+
+      Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
+              point ->
+                      Stream.<Point>builder()
+                              .add(new Point(point.getX(), point.getY() - 1))
+                              .add(new Point(point.getX(), point.getY() + 1))
+                              .add(new Point(point.getX() - 1, point.getY()))
+                              .add(new Point(point.getX() + 1, point.getY()))
+                              .build();
+      Random rand = new Random();
+      List<Point> walls = new ArrayList<>();
+      List<Point> maze = new ArrayList<>();
+      Map<Point, Boolean> placeToPassage = new HashMap<>();
+      for (int x = 0; x < getNumCols(); x ++) {
+         for(int y =0; y < getNumRows(); y++) {
+            placeToPassage.put(new Point(x, y), false);
+         }
+      }
+      Point start = new Point(10, 10);
+      placeToPassage.put(start, true);
+      start.visited = true;
+      walls.addAll(CARDINAL_NEIGHBORS.apply(start).filter((s) -> (withinBounds(s))).collect(Collectors.toList()));
+      while (!walls.isEmpty()) {
+         int index = rand.nextInt(walls.size());
+         Point curr = walls.get(index);
+         List<Point> neighbors = CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter((s) -> (placeToPassage.get(s))).collect(Collectors.toList());
+         boolean isPassage = neighbors.size() <= 2;
+         if (isPassage) {
+            placeToPassage.put(curr, true);
+            walls.addAll(CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter(s -> (!placeToPassage.get(s))).collect(Collectors.toList()));
+         }
+         walls.remove(index);
+         curr.visited = true;
+      }
+      for (int x = 0; x < getNumCols(); x ++) {
+         for(int y =0; y < getNumRows(); y++) {
+            if (!placeToPassage.get(new Point(x, y)) && !isOccupied(new Point(x,y))) {
+               Entity e = new Obstacle("rand", new Point(x,y), imageStore.getImageList(OBSTACLE_KEY));
+               tryAddEntity(e);
+            }
+         }
+      }
 
    }
 
@@ -208,6 +222,7 @@ final class WorldModel
                return parseSgrass(properties, imageStore);
          }
       }
+
       return false;
    }
 
@@ -219,7 +234,7 @@ final class WorldModel
                  Integer.parseInt(properties[BGND_ROW]));
          String id = properties[BGND_ID];
          setBackground(pt,
-                 new Background(id, imageStore.getImageList(id)));
+                 Background.createSea(id, imageStore.getImageList("background_default")));
       }
 
       return properties.length == BGND_NUM_PROPERTIES;

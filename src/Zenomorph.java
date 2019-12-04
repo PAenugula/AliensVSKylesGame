@@ -44,7 +44,7 @@ public class Zenomorph extends Moveable{
         List<Point> path = this.strategy.computePath(
                     this.getPosition(),
                     destination,
-                    (point) -> worldModel.withinBounds(point) && !worldModel.isOccupied(point),
+                    (point) -> worldModel.withinBounds(point) && (!worldModel.isOccupied(point) || worldModel.getOccupant(point).getClass().equals(this.getClass())),
                     (p1, p2) -> worldModel.neighbors(p1, p2),
                     PathingStrategy.CARDINAL_NEIGHBORS);
         return path.size() > 0? path.get(0): this.getPosition();
