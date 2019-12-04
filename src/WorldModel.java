@@ -1,6 +1,9 @@
 import processing.core.PImage;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 WorldModel ideally keeps track of the actual size of our grid world and what is in that world
@@ -14,6 +17,7 @@ final class WorldModel
    private Background background[][];
    private Entity occupancy[][];
    private Set<Entity> entities;
+   private Player gamePlayer1;
 
    private static final String OCTO_KEY = "octo";
    private static final int OCTO_NUM_PROPERTIES = 7;
@@ -63,8 +67,12 @@ final class WorldModel
 
 
    //OUR NEW STATIC VARIABLES:
-   private static final String PLAYER1_KEY = "player";
+   private static final String PLAYER_KEY = "player";
+   private static final int PLAYER_ID = 1;
+   private static final int PLAYER_COL = 2;
+   private static final int PLAYER_ROW = 3;
    private static final String ZENOMORPH_KEY = "zenomorph";
+   private static final String RAPTOR_KEY = "raptor";
 
 
 
@@ -94,8 +102,18 @@ final class WorldModel
       return entities;
    }
 
+   public void movePlayer(int dx, int dy) {
+      Point newPos = new Point(gamePlayer1.getPosition().getX() + dx, gamePlayer1.getPosition().getY() + dy);
+      if (withinBounds(newPos) && !isOccupied(newPos)) {
+         gamePlayer1.setPosition(newPos);
+      }
+   }
+
    public void load(Scanner in, ImageStore imageStore)
    {
+
+
+
       int lineNumber = 0;
       while (in.hasNextLine())
       {
@@ -119,6 +137,49 @@ final class WorldModel
          }
          lineNumber++;
       }
+
+//      Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
+//              point ->
+//                      Stream.<Point>builder()
+//                              .add(new Point(point.getX(), point.getY() - 1))
+//                              .add(new Point(point.getX(), point.getY() + 1))
+//                              .add(new Point(point.getX() - 1, point.getY()))
+//                              .add(new Point(point.getX() + 1, point.getY()))
+//                              .build();
+//      Random rand = new Random();
+//      List<Point> walls = new ArrayList<>();
+//      List<Point> maze = new ArrayList<>();
+//      Map<Point, Boolean> placeToPassage = new HashMap<>();
+//      for (int x = 0; x < getNumCols(); x ++) {
+//         for(int y =0; y < getNumRows(); y++) {
+//            placeToPassage.put(new Point(x, y), false);
+//         }
+//      }
+//      Point start = new Point(rand.nextInt(getNumCols()), rand.nextInt(getNumRows()));
+//      placeToPassage.put(start, true);
+//      start.visited = true;
+//      walls.addAll(CARDINAL_NEIGHBORS.apply(start).filter((s) -> (withinBounds(s))).collect(Collectors.toList()));
+//      while (!walls.isEmpty()) {
+//         int index = rand.nextInt(walls.size());
+//         Point curr = walls.get(index);
+//         List<Point> neighbors = CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter((s) -> (placeToPassage.get(s))).collect(Collectors.toList());
+//         boolean isPassage = neighbors.size() <= 1;
+//         if (isPassage) {
+//            placeToPassage.put(curr, true);
+//            walls.addAll(CARDINAL_NEIGHBORS.apply(curr).filter((s) -> withinBounds(s)).filter(s -> (!placeToPassage.get(s))).collect(Collectors.toList()));
+//         }
+//         walls.remove(index);
+//         curr.visited = true;
+//      }
+//      for (int x = 0; x < getNumCols(); x ++) {
+//         for(int y =0; y < getNumRows(); y++) {
+//            if (!placeToPassage.get(new Point(x, y)) && getOccupant(new Point(x, y)).getClass().equals(Background.class)) {
+//               Entity e = new Obstacle("rand", new Point(x,y), imageStore.getImageList(OBSTACLE_KEY));
+//               tryAddEntity(e);
+//            }
+//         }
+//      }
+
    }
 
    private boolean processLine(String line,
@@ -129,8 +190,12 @@ final class WorldModel
       {
          switch (properties[PROPERTY_KEY])
          {
+            case ZENOMORPH_KEY:
+               return parseZeno(properties, imageStore);
             case BGND_KEY:
                return parseBackground(properties, imageStore);
+            case PLAYER_KEY:
+               return parsePlayer(properties, imageStore);
             case OCTO_KEY:
                return parseOcto(properties, imageStore);
             case OBSTACLE_KEY:
@@ -160,6 +225,23 @@ final class WorldModel
       return properties.length == BGND_NUM_PROPERTIES;
    }
 
+   private boolean parsePlayer(String [] properties, ImageStore imageStore)
+   {
+      if (properties.length == 4)
+      {
+         Point pt = new Point(Integer.parseInt(properties[PLAYER_COL]),
+                 Integer.parseInt(properties[PLAYER_ROW]));
+         String id = properties[BGND_ID];
+         this.gamePlayer1 = new Player(properties[OCTO_ID],
+                 pt,
+                 imageStore.getImageList(PLAYER_KEY),
+                 0);
+         tryAddEntity(gamePlayer1);
+      }
+
+      return properties.length == 4;
+   }
+
    private void setBackground(Point pos,
       Background background)
    {
@@ -182,6 +264,24 @@ final class WorldModel
                  Integer.parseInt(properties[OCTO_ACTION_PERIOD]),
                  Integer.parseInt(properties[OCTO_ANIMATION_PERIOD]),
                  imageStore.getImageList(OCTO_KEY));
+         tryAddEntity(entity);
+      }
+
+      return properties.length == OCTO_NUM_PROPERTIES;
+   }
+
+   private boolean parseZeno(String [] properties,
+                                   ImageStore imageStore)
+   {
+      if (properties.length == OCTO_NUM_PROPERTIES)
+      {
+         Point pt = new Point(Integer.parseInt(properties[OCTO_COL]),
+                 Integer.parseInt(properties[OCTO_ROW]));
+         Entity entity = new Zenomorph(properties[OCTO_ID],
+                 pt,
+                 Integer.parseInt(properties[OCTO_ACTION_PERIOD]),
+                 Integer.parseInt(properties[OCTO_ANIMATION_PERIOD]),
+                 imageStore.getImageList(ZENOMORPH_KEY));
          tryAddEntity(entity);
       }
 

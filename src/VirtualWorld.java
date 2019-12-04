@@ -109,7 +109,8 @@ public final class VirtualWorld
                dx = 1;
                break;
          }
-         view.shiftView(dx, dy);
+         //view.shiftView(dx, dy);
+         world.movePlayer(dx, dy);
       }
    }
 

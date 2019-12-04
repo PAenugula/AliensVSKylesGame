@@ -5,6 +5,7 @@ final class Point
    private int g;
    private int h;
    private int f;
+   public boolean visited;
    private Point pointBefore;
    private double distanceFromStart;
 
@@ -12,6 +13,7 @@ final class Point
    {
       this.x = x;
       this.y = y;
+      this.visited = false;
       this.distanceFromStart = Integer.MAX_VALUE;
    }
 

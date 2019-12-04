@@ -31,11 +31,15 @@ quake images/quake3.bmp 255 255 255 0
 quake images/quake4.bmp 255 255 255 0
 quake images/quake5.bmp 255 255 255 0
 quake images/quake6.bmp 255 255 255 0
-bubbles images/bubbles.bmp
+bubbles images/groundBlock.png
 seaGrass images/Seaweed1.bmp 255 255 255 0
-background_default images/none.bmp
+background_default images/groundBlock.png
 zenomorph images/zenomorph0.png 255 255 255 128
 zenomorph images/zenomorph1.png 255 255 255 128
 zenomorph images/zenomorph2.png 255 255 255 128
 zenomorph images/zenomorph3.png 255 255 255 128
 zenomorph images/zenomorph4.png 255 255 255 128
+spaceship images/Spaceship0.png 255 255 255 128
+spaceship images/Spaceship1.png 255 255 255 128
+player images/player1.png 255 255 255 128
+player images/player2.png 255 255 255 128
